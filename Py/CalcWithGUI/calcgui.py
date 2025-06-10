@@ -8,22 +8,29 @@ def add_to_calculation(symbol):
     text_result.delete(1.0, "end") # Clear the text widget
     text_result.insert(1.0 , calculation) #Insert the updated calculation into the text widget)
 
-def evalute_calculation():
+def evaluate_calculation():
     global calculation
     try:
         calculation = str(eval(calculation)) # Evaluate the calculation string
         text_result.delete(1.0, "end")
         text_result.insert(1.0, calculation)
-    except: 
+    except (ZeroDivisionError):
+        clear_calculation()
+        text_result.insert(1.0, "ZeroDivisionError")
+    except (SyntaxError): 
         clear_calculation()
         text_result.insert(1.0, "Error")
+    except Exception as e:
+        clear_calculation()
+        text_result.insert(1.0, "Error")
+        printf("An unexpected error occurred: ", e)
 
 
 def clear_calculation():
     global calculation
     calculation = ""
     text_result.delete(1.0, "end")
-
+#This function clear the text widget
 
 root = tk.Tk() # Create the main window
 root.geometry("300x275") #Set the size of the window
@@ -69,5 +76,23 @@ btn_minus.grid(row = 3, column = 4)
 
 btn_multiply = tk.Button(root, text = "*", command=lambda: add_to_calculation("*"), width = 5, font = ("Times New Roman", 14))
 btn_multiply.grid(row = 4, column = 4)
+
+btn_divide = tk.Button(root, text = "/", command=lambda: add_to_calculation("/"), width = 5, font = ("Times New Roman", 14))
+btn_divide.grid(row = 5, column = 4)
+
+btn_point = tk.Button(root, text = ".", command=lambda: add_to_calculation("."), width = 5, font = ("Times New Roman", 14))
+btn_point.grid(row = 5, column = 3)
+
+btn_clear = tk.Button(root, text = "C", command=clear_calculation, width = 5, font = ("Times New Roman", 14))
+btn_clear.grid(row = 5, column = 1)
+
+btn_equals = tk.Button(root, text="=", command=evaluate_calculation, width=5, font=("Times New Roman", 14))
+btn_equals.grid(row=6, column=4)
+
+btn_left_bracket = tk.Button(root, text="(", command=lambda: add_to_calculation("("), width=5, font=("Times New Roman", 14))
+btn_left_bracket.grid(row=6, column=1)
+
+btn_right_bracket = tk.Button(root, text=")", command=lambda: add_to_calculation(")"), width=5, font=("Times New Roman", 14))
+btn_right_bracket.grid(row=6, column=2)
 
 root.mainloop() # Start the main event loop, basically the program runs until the window is closed.
